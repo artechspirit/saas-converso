@@ -8,6 +8,7 @@ const navItems = [
   { label: "Companions", href: "/companions" },
   { label: "My Journey", href: "/my-journey" },
 ];
+
 const NavItems = () => {
   const pathname = usePathname();
   return (
