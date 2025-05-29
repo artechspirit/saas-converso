@@ -224,3 +224,11 @@ body {
     scrollbar-width: none;
   }
 }
+
+.multiline-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;  /* batasi 2 baris */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

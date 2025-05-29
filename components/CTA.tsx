@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const CTA = () => {
   return (
-    <section className="cta-section">
+    <section className="cta-section max-md:w-full">
       <div className="cta-badge">Start learning your way</div>
       <h2 className="text-3xl font-bold">
         Build and Personalize learning Companion

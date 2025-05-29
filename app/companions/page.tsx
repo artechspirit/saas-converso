@@ -1,19 +1,27 @@
+"use client";
+
+import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
 import CompanionCard from "@/components/CompanionCard";
 import SearchInput from "@/components/SearchInput";
 import SubjectFilter from "@/components/SubjectFilter";
-import { getAllCompanions } from "@/lib/actions/companion.actions";
 import { getSubjectColor } from "@/lib/utils";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import Spinner from "@/components/Spinner";
+import { Suspense } from "react";
 
-const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
-  const { userId } = await auth();
-  if (!userId) redirect("/sign-in");
-  const filters = await searchParams;
-  const subject = filters.subject ? filters.subject : "";
-  const topic = filters.topic ? filters.topic : "";
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  const companions = await getAllCompanions({ subject, topic });
+function CompanionsContent() {
+  const searchParams = useSearchParams();
+
+  const subject = searchParams.get("subject") || "";
+  const topic = searchParams.get("topic") || "";
+
+  const {
+    data: companions,
+    isLoading,
+    error,
+  } = useSWR(`/api/companions?subject=${subject}&topic=${topic}`, fetcher);
 
   return (
     <main>
@@ -25,17 +33,29 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
         </div>
       </section>
 
-      <section className="companions-grid">
-        {companions.map((companion) => (
-          <CompanionCard
-            key={companion.id}
-            {...companion}
-            color={getSubjectColor(companion.subject)}
-          />
-        ))}
+      <section className="home-section grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {error ? (
+          <p>Failed to load companions.</p>
+        ) : companions?.length === 0 ? (
+          <p>No companions found.</p>
+        ) : (
+          companions?.map((companion: any) => (
+            <CompanionCard
+              key={companion.id}
+              {...companion}
+              color={getSubjectColor(companion.subject)}
+            />
+          ))
+        )}
       </section>
     </main>
   );
-};
+}
 
-export default CompanionsLibrary;
+export default function CompanionsLibrary() {
+  return (
+    <Suspense>
+      <CompanionsContent />
+    </Suspense>
+  );
+}
