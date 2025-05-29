@@ -3,7 +3,6 @@ import Link from "next/link";
 import { SignInButton, SignedOut, UserButton, SignedIn } from "@clerk/nextjs";
 import NavItems from "./NavItems";
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 
 const Navbar = async () => {
   const { userId } = await auth();
