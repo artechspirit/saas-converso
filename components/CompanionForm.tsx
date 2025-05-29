@@ -199,7 +199,7 @@ const CompanionForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full cursor-pointer">
+        <Button type="submit" className="w-full bg-orange-600 cursor-pointer">
           Build Your Companion
         </Button>
       </form>
